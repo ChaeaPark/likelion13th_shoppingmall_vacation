@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --breakpoint-ph: 360px;
+    --breakpoint-dt: 1440px;
+  }
+}
