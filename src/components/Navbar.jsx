@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHidden = location.pathname === '/';
 
   return (
     <>
@@ -15,10 +17,12 @@ export default function Navbar() {
           🛒 MyShop
         </Link>
         <div className="space-x-6 text-lg">
-          <Link to="/" className="hover:text-yellow-300 transition">
-            Home
-          </Link>
-          <Link to="/signin" className="hover:text-yellow-300 transition">
+          {!isHidden && (
+            <Link to="/" className="hover:text-yellow-300 transition">
+              Home
+            </Link>
+          )}
+          <Link to="/" className="hover:text-yellow-300 transition ">
             Sign In
           </Link>
           <Link to="/cart" className="hover:text-yellow-300 transition">

@@ -18,11 +18,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Layout이 없는 단일 페이지 */}
-        <Route path="/" element={<Signin />} />
-        <Route path="/register" element={<Register />} />
 
         {/* Layout이 적용되는 공통 구조 */}
         <Route element={<Layout />}>
+          <Route path="/" element={<Signin />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/main" element={<Main addToCart={addToCart} />} />
           <Route
             path="/cart"
