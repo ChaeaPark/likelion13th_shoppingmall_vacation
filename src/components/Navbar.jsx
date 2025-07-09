@@ -17,7 +17,7 @@ export default function Navbar() {
           to="/"
           className="text-2xl font-bold tracking-tight hover:text-yellow-200"
         >
-          MyShop
+          ShopMall
         </Link>
 
         <div className="space-x-6 text-lg flex items-center">
@@ -47,7 +47,7 @@ export default function Navbar() {
           <img src={buttonIcon} alt="메뉴 열기" className="w-8 h-8" />
         </button>
         <Link to="/" className="text-xl font-semibold tracking-wide">
-          MyShop
+          ShopMall
         </Link>
       </nav>
 
