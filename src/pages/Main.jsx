@@ -25,10 +25,10 @@ const Main = ({ addToCart }) => {
             {clothes.map((item) => (
               <Card
                 key={item.id}
+                id={item.id}
                 name={item.name}
                 category={item.category}
                 price={item.price}
-                imageUrl={item.imageUrl}
                 onAddToCart={() => addToCart(item)}
               />
             ))}

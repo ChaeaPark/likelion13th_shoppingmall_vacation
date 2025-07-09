@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import buttonIcon from '../assets/Button.svg';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,18 +11,18 @@ export default function Navbar() {
     <>
       {/* 데스크탑 Navbar */}
       <nav className="hidden dt:flex justify-between items-center px-10 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
+        {!isHidden && (
+          <Link to="/" className="hover:text-yellow-300 transition">
+            Home
+          </Link>
+        )}
         <Link
           to="/"
           className="text-2xl font-bold tracking-tight hover:text-yellow-200"
         >
-          🛒 MyShop
+          MyShop
         </Link>
         <div className="space-x-6 text-lg">
-          {!isHidden && (
-            <Link to="/" className="hover:text-yellow-300 transition">
-              Home
-            </Link>
-          )}
           <Link to="/" className="hover:text-yellow-300 transition ">
             Sign In
           </Link>
@@ -35,12 +36,12 @@ export default function Navbar() {
       <nav className="dt:hidden ph:flex justify-between items-center px-5 h-16 bg-gradient-to-r from-purple-600 to-indigo-700 text-white fixed top-0 left-0 right-0 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-3xl focus:outline-none"
+          className="focus:outline-none"
         >
-          ☰
+          <img src={buttonIcon} alt="메뉴 열기" className="w-8 h-8" />
         </button>
         <Link to="/" className="text-xl font-semibold tracking-wide">
-          🛒 MyShop
+          MyShop
         </Link>
       </nav>
 

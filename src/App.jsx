@@ -5,6 +5,7 @@ import Main from './pages/Main';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Layout from './components/Layout';
+import Detail from './pages/Detail';
 import './index.css';
 
 function App() {
@@ -27,6 +28,10 @@ function App() {
           <Route
             path="/cart"
             element={<Cart cartItems={cartItems} setCartItems={setCartItems} />}
+          />
+          <Route
+            path="/detail/:id"
+            element={<Detail addToCart={addToCart} />}
           />
         </Route>
       </Routes>

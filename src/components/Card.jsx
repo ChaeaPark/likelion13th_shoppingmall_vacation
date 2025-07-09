@@ -3,16 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import CommonButton from './CommonButton';
 import img9 from '../assets/Image9.png';
 
-export default function Card({ name, category, price, imageUrl, onAddToCart }) {
+export default function Card({ id, name, category, price, onAddToCart }) {
   const navigate = useNavigate();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
     onAddToCart();
     navigate('/cart');
   };
 
+  const handleCardClick = () => {
+    navigate(`/detail/${id}`);
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-md transition-transform duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl hover:ring-2 hover:ring-purple-300 overflow-hidden w-full border border-gray-200">
+    <div
+      className="bg-white rounded-xl shadow-md transition-transform duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl hover:ring-2 hover:ring-purple-300 overflow-hidden w-full border border-gray-200 cursor-pointer"
+      onClick={handleCardClick}
+    >
       <img
         src={img9}
         alt={name}
@@ -24,19 +32,21 @@ export default function Card({ name, category, price, imageUrl, onAddToCart }) {
         <div className="mt-2 text-right text-indigo-600 font-semibold text-base md:text-lg">
           {price.toLocaleString()}원
         </div>
-        <CommonButton onClick={handleAddToCart} variant="main">
-          Add to Cart
-        </CommonButton>
+
+        {/* Add to Cart 버튼은 클릭 방지 */}
+        <div onClick={handleAddToCart}>
+          <CommonButton variant="main">장바구니</CommonButton>
+        </div>
       </div>
     </div>
   );
 }
 
 Card.propTypes = {
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   category: PropTypes.string,
   price: PropTypes.number.isRequired,
-  imageUrl: { img9 },
   onAddToCart: PropTypes.func.isRequired,
 };
 
