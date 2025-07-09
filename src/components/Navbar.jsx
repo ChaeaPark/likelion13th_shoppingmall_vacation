@@ -13,7 +13,7 @@ export default function Navbar() {
       <nav className="hidden dt:flex justify-between items-center px-10 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
         {!isHidden && (
           <Link to="/" className="hover:text-yellow-300 transition">
-            Home
+            Sign In
           </Link>
         )}
         <Link
@@ -23,7 +23,7 @@ export default function Navbar() {
           MyShop
         </Link>
         <div className="space-x-6 text-lg">
-          <Link to="/" className="hover:text-yellow-300 transition ">
+          <Link to="/" className="hover:text-yellow-300 transition">
             Sign In
           </Link>
           <Link to="/cart" className="hover:text-yellow-300 transition">
@@ -50,13 +50,6 @@ export default function Navbar() {
         <div className="dt:hidden ph:flex flex-col bg-white text-black shadow-md absolute top-16 left-0 right-0 py-4 px-6 z-40 space-y-3">
           <Link
             to="/"
-            className="hover:text-purple-600 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            to="/signin"
             className="hover:text-purple-600 transition"
             onClick={() => setIsOpen(false)}
           >
