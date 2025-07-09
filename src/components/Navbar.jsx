@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import buttonIcon from '../assets/Button.svg';
+import signinIcon from '../assets/Signin.svg';
+import cartIcon from '../assets/Cart.svg';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,23 +13,27 @@ export default function Navbar() {
     <>
       {/* 데스크탑 Navbar */}
       <nav className="hidden dt:flex justify-between items-center px-10 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
-        {!isHidden && (
-          <Link to="/" className="hover:text-yellow-300 transition">
-            Sign In
-          </Link>
-        )}
         <Link
           to="/"
           className="text-2xl font-bold tracking-tight hover:text-yellow-200"
         >
           MyShop
         </Link>
-        <div className="space-x-6 text-lg">
-          <Link to="/" className="hover:text-yellow-300 transition">
-            Sign In
+
+        <div className="space-x-6 text-lg flex items-center">
+          <Link
+            to="/"
+            className="hover:text-yellow-300 transition flex items-center space-x-2"
+          >
+            <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+            <span className="text-white">Sign In</span>
           </Link>
-          <Link to="/cart" className="hover:text-yellow-300 transition">
-            Cart
+          <Link
+            to="/cart"
+            className="hover:text-yellow-300 transition flex items-center space-x-2"
+          >
+            <img src={cartIcon} alt="Cart" className="w-6 h-6" />
+            <span className="text-white">Cart</span>
           </Link>
         </div>
       </nav>
@@ -50,17 +56,19 @@ export default function Navbar() {
         <div className="dt:hidden ph:flex flex-col bg-white text-black shadow-md absolute top-16 left-0 right-0 py-4 px-6 z-40 space-y-3">
           <Link
             to="/"
-            className="hover:text-purple-600 transition"
             onClick={() => setIsOpen(false)}
+            className="flex items-center space-x-2"
           >
-            Sign In
+            <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+            <span className="text-black">Sign In</span>
           </Link>
           <Link
             to="/cart"
-            className="hover:text-purple-600 transition"
             onClick={() => setIsOpen(false)}
+            className="flex items-center space-x-2"
           >
-            Cart
+            <img src={cartIcon} alt="Cart" className="w-6 h-6" />
+            <span className="text-black">Cart</span>
           </Link>
         </div>
       )}
