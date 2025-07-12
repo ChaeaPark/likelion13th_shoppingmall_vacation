@@ -1,8 +1,23 @@
-import React from 'react';
-import clothes from '../data/clothes';
+import React, { useEffect, useState } from 'react';
+import { getAllProducts } from '../apis/products';
 import Card from '../components/Card';
 
 const Main = ({ addToCart }) => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error('상품 목록을 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <main className="relative bg-gradient-to-br from-purple-100 to-indigo-100 min-h-screen flex justify-center px-4 py-10">
       <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -22,7 +37,7 @@ const Main = ({ addToCart }) => {
             Featured Products
           </div>
           <div className="w-full grid grid-cols-2 dt:grid-cols-4 gap-6">
-            {clothes.map((item) => (
+            {products.map((item) => (
               <Card
                 key={item.id}
                 id={item.id}
