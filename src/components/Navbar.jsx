@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import buttonIcon from '../assets/Button.svg';
 import signinIcon from '../assets/Signin.svg';
 import cartIcon from '../assets/Cart.svg';
@@ -7,8 +7,6 @@ import SearchBar from './SearchBar';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const isHidden = location.pathname === '/';
 
   return (
     <>
