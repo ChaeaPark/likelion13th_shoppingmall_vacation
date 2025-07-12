@@ -1,20 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CommonButton from '../components/CommonButton';
-import { cartMock } from '../mock/Cartmock';
+import { getCartItems, removeFromCart } from '../apis/cart';
 import CartIcon from '../assets/Cart.svg';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const [cartData, setCartData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 장바구니 데이터 불러오기
+  const fetchCart = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getCartItems();
+      setCartData(data);
+      setCartItems(
+        data.cartItems.map((item) => ({
+          ...item,
+          checked: true,
+        }))
+      );
+    } catch (err) {
+      console.error('장바구니 데이터를 불러오는 데 실패했습니다:', err);
+      setError('장바구니를 불러오지 못했습니다. 다시 시도해주세요.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setCartItems(
-      cartMock.map((item) => ({
-        ...item,
-        checked: true,
-      }))
-    );
+    fetchCart();
   }, []);
 
   const toggleCheck = (id) => {
@@ -25,8 +44,23 @@ const Cart = () => {
     );
   };
 
-  const deleteItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  // 장바구니 아이템 삭제 핸들러 (API 연동)
+  const deleteItem = async (id, itemName) => {
+    if (window.confirm(`${itemName}을(를) 장바구니에서 삭제하시겠습니까?`)) {
+      setLoading(true); // 삭제 중 로딩 상태 활성화
+      setError(null);
+      try {
+        await removeFromCart(id); // API 호출
+        await fetchCart(); // 삭제 후 장바구니 데이터 다시 불러오기
+        alert(`${itemName}이(가) 장바구니에서 삭제되었습니다.`);
+      } catch (err) {
+        console.error('장바구니 아이템 삭제 실패:', err);
+        setError('아이템 삭제에 실패했습니다. 다시 시도해주세요.');
+        alert('아이템 삭제에 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const toggleAllCheck = (e) => {
@@ -46,6 +80,25 @@ const Cart = () => {
   const handleGoHome = () => {
     navigate('/main');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-indigo-100">
+        <p className="text-xl text-gray-700">장바구니를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-indigo-100">
+        <p className="text-xl text-red-500">{error}</p>
+        <CommonButton variant="default" onClick={fetchCart}>
+          다시 시도
+        </CommonButton>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-8 flex justify-between gap-10 relative">
@@ -100,6 +153,9 @@ const Cart = () => {
                   <div className="flex flex-col">
                     <p className="font-medium text-gray-800 whitespace-nowrap">
                       {item.name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      카테고리: {item.category}
                     </p>
                     <p className="text-sm text-gray-500">
                       담은 수량: {item.quantity}
