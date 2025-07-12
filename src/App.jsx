@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Layout from './components/Layout';
 import Detail from './pages/Detail';
+import SearchPage from './pages/SearchPage';
 import './index.css';
 
 function App() {
@@ -32,6 +33,10 @@ function App() {
           <Route
             path="/detail/:id"
             element={<Detail addToCart={addToCart} />}
+          />
+          <Route
+            path="/search"
+            element={<SearchPage addToCart={addToCart} />}
           />
         </Route>
       </Routes>
