@@ -9,3 +9,8 @@ export const getAllProducts = async () => {
     throw error;
   }
 };
+
+export const getProductById = async (id) => {
+  const response = await axios.get(`/products/${id}`);
+  return response.data;
+};

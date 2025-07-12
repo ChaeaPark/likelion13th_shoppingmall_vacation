@@ -1,20 +1,32 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import clothes from '../data/clothes';
+import { useEffect, useState } from 'react';
 import CommonButton from '../components/CommonButton';
 import img9 from '../assets/image9.png';
+import axios from '../apis/axios';
 
 const Detail = ({ addToCart }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = clothes.find((item) => item.id === parseInt(id));
-
+  const [product, setProduct] = useState(null);
   const [count, setCount] = useState(1);
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
 
-  if (!product) return <p>상품을 찾을 수 없습니다.</p>;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(`/products/${id}`);
+        setProduct(res.data);
+      } catch (err) {
+        setError('해당 상품을 불러올 수 없습니다.');
+        console.error(err);
+      }
+    };
+    fetchProduct();
+  }, [id]);
 
   const handleAddToCart = () => {
+    if (!product) return;
     addToCart({ ...product, quantity: count });
     setShowModal(true);
   };
@@ -29,6 +41,14 @@ const Detail = ({ addToCart }) => {
   const handleGoToCart = () => {
     navigate('/cart');
   };
+
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (!product)
+    return (
+      <p className="text-center text-gray-600">
+        상품 정보를 불러오는 중입니다...
+      </p>
+    );
 
   return (
     <div className="relative bg-gradient-to-br from-purple-100 to-indigo-100 min-h-screen flex justify-center px-4 py-20">
