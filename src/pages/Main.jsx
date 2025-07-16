@@ -36,18 +36,22 @@ const Main = ({ addToCart }) => {
           <div className="text-base md:text-lg tracking-widest text-gray-500">
             Featured Products
           </div>
-          <div className="w-full grid grid-cols-2 dt:grid-cols-4 gap-6">
-            {products.map((item) => (
-              <Card
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                category={item.category}
-                price={item.price}
-                onAddToCart={() => addToCart(item)}
-              />
-            ))}
-          </div>
+          {products && products.length > 0 ? (
+            <div className="w-full grid grid-cols-2 dt:grid-cols-4 gap-6">
+              {products.map((item) => (
+                <Card
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  category={item.category}
+                  price={item.price}
+                  onAddToCart={() => addToCart(item)}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">상품 정보를 불러올 수 없습니다.</p>
+          )}
         </div>
       </section>
     </main>
