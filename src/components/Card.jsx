@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import CommonButton from './CommonButton';
-import img9 from '../assets/Image9.png';
+import img9 from '../assets/image9.png';
 
 export default function Card({ id, name, category, price, onAddToCart }) {
   const navigate = useNavigate();
