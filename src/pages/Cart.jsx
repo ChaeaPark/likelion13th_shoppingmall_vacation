@@ -37,7 +37,7 @@ const Cart = () => {
       const itemsWithCheckedState = fetchedCartItems.map((item, index) => ({
         ...item,
         checked: true,
-        _uniqueKey: item.id
+        _uniqueKey: item.cartItemId
           ? item.id
           : `temp-cart-item-${index}-${Date.now()}-${Math.random()}`,
       }));
@@ -46,7 +46,7 @@ const Cart = () => {
       console.log(
         '현재 장바구니 아이템 ID 및 고유 키 목록:',
         itemsWithCheckedState.map((item) => ({
-          id: item.id,
+          id: item.cartItemId,
           _uniqueKey: item._uniqueKey,
         }))
       );
@@ -65,7 +65,7 @@ const Cart = () => {
   const toggleCheck = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
+        item.cartItmeId === id ? { ...item, checked: !item.checked } : item
       )
     );
   };
@@ -75,7 +75,7 @@ const Cart = () => {
       setLoading(true);
       setError(null);
       try {
-        await removeFromCart(id);
+        await removeFromCart(id, userEmail);
         await fetchCart();
         alert(`${itemName}이(가) 장바구니에서 삭제되었습니다.`);
       } catch (err) {
@@ -144,11 +144,8 @@ const Cart = () => {
             </button>
           </div>
         ) : (
-          <React.Fragment key="main-cart-content-wrapper-final-key">
-            <div
-              className="flex items-center mb-4"
-              key="all-checkbox-header-final"
-            >
+          <>
+            <div className="flex items-center mb-4">
               <input
                 type="checkbox"
                 className="w-4 h-4 accent-purple-500 mr-2"
@@ -160,14 +157,14 @@ const Cart = () => {
 
             {cartItems.map((item) => (
               <div
-                key={item._uniqueKey}
+                key={item.cartItemId}
                 className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 mb-4"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <input
                     type="checkbox"
                     checked={item.checked}
-                    onChange={() => toggleCheck(item.id)}
+                    onChange={() => toggleCheck(item.cartItemId)}
                     className="w-4 h-4 accent-purple-500"
                   />
                   <img
@@ -193,7 +190,7 @@ const Cart = () => {
                     {(item.product.price * item.quantity).toLocaleString()}원
                   </div>
                   <button
-                    onClick={() => deleteItem(item.id, item.name)}
+                    onClick={() => deleteItem(item.cartItemId, item.name)}
                     className="text-gray-400 hover:text-red-500 text-lg"
                   >
                     ✕
@@ -202,15 +199,12 @@ const Cart = () => {
               </div>
             ))}
 
-            <div
-              className="flex justify-end mt-6"
-              key="clear-cart-button-final"
-            >
+            <div className="flex justify-end mt-6">
               <CommonButton onClick={() => setCartItems([])} variant="purple">
                 장바구니 비우기
               </CommonButton>
             </div>
-          </React.Fragment>
+          </>
         )}
       </div>
 
@@ -241,5 +235,4 @@ const Cart = () => {
     </div>
   );
 };
-
 export default Cart;

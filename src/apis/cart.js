@@ -36,13 +36,16 @@ export const addToCart = async (itemToAdd) => {
   }
 };
 
-export const removeFromCart = async (cartItemId) => {
+export const removeFromCart = async (cartItemId, userEmail) => {
   try {
-    const res = await instance.delete(`${CART_API_BASE_URL}/${cartItemId}`, {
-      params: {
-        email: userEmail,
-      },
-    });
+    const res = await instance.delete(
+      `${CART_API_BASE_URL_add}/${cartItemId}`,
+      {
+        params: {
+          email: userEmail,
+        },
+      }
+    );
     return res.data;
   } catch (error) {
     console.error(
