@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from '../apis/axios';
+import axiosInstance from '../apis/axios';
 import Card from '../components/Card';
 
 export default function SearchPage({ addToCart }) {
@@ -13,7 +13,7 @@ export default function SearchPage({ addToCart }) {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        const res = await axios.get(
+        const res = await axiosInstance.get(
           `/products?name=${encodeURIComponent(searchTerm)}`
         );
         setResults(res.data.products);

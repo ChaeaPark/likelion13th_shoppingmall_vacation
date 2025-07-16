@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CommonButton from '../components/CommonButton';
 import img9 from '../assets/image9.png';
-import axios from '../apis/axios';
+import axiosInstance from '../apis/axios';
 
 const Detail = ({ addToCart }) => {
   const { id } = useParams();
@@ -15,7 +15,7 @@ const Detail = ({ addToCart }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/products/${id}`);
+        const res = await axiosInstance.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         setError('해당 상품을 불러올 수 없습니다.');

@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axiosInstance from 'axios';
 
 export const getAllProducts = async () => {
   try {
-    const response = await axios.get('/products');
+    const response = await axiosInstance.get('/products');
     return response.data.products;
   } catch (error) {
     console.error('상품 전체 조회 실패:', error);
@@ -11,6 +11,6 @@ export const getAllProducts = async () => {
 };
 
 export const getProductById = async (id) => {
-  const response = await axios.get(`/products/${id}`);
+  const response = await axiosInstance.get(`/products/${id}`);
   return response.data;
 };
