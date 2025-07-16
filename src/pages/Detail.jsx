@@ -16,7 +16,7 @@ const Detail = ({ addToCart }) => {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(`/api/v1/products/${id}`);
-        setProduct(res.data);
+        setProduct(res.data.data);
       } catch (err) {
         setError('해당 상품을 불러올 수 없습니다.');
         console.error(err);

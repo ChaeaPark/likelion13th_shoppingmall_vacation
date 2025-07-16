@@ -2,9 +2,13 @@ import axiosInstance from './axios';
 
 const CART_API_BASE_URL = '/cart';
 
-export const getCartItems = async () => {
+export const getCartItems = async (userEmail) => {
   try {
-    const res = await axiosInstance.get(CART_API_BASE_URL);
+    const res = await axiosInstance.get(CART_API_BASE_URL, {
+      params: {
+        email: userEmail,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error('장바구니 아이템을 불러오는 데 실패했습니다:', error);
