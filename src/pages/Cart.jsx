@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CommonButton from '../components/CommonButton';
 import { getCartItems, removeFromCart } from '../apis/cart';
 import CartIcon from '../assets/Cart.svg';
+import img9 from '../assets/Image9.png';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -11,20 +12,45 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 장바구니 데이터 불러오기
+  const userEmail = 'user@example.com';
+
   const fetchCart = async () => {
     setLoading(true);
     setError(null);
     try {
-      const userEmail = localStorage.getItem('userEmail');
-      if (!userEmail) throw new Error('로그인 정보가 없습니다.');
-
       const data = await getCartItems(userEmail);
-      setCartData(data);
-      setCartItems(
-        data.cartItems.map((item) => ({
-          ...item,
-          checked: true,
+      console.log('--- getCartItems에서 받은 응답 데이터 (Cart.jsx) ---', data);
+
+      let fetchedCartItems = [];
+      if (data && data.data && Array.isArray(data.data.cartItems)) {
+        fetchedCartItems = data.data.cartItems;
+      } else if (data && Array.isArray(data.cartItems)) {
+        fetchedCartItems = data.cartItems;
+      } else {
+        console.warn(
+          '장바구니 API 응답이 예상과 다릅니다. cartItems 배열을 찾을 수 없습니다.',
+          data
+        );
+        fetchedCartItems = [];
+      }
+
+      const itemsWithCheckedState = fetchedCartItems.map((item, index) => ({
+        ...item,
+        checked: true,
+        // **고유 키 생성 로직 강화**: item.id가 없을 경우를 대비하여 고유한 임시 키 생성
+        // 실제 운영 환경에서는 백엔드에서 고유한 item.id를 받는 것이 가장 좋습니다.
+        _uniqueKey: item.id
+          ? item.id
+          : `temp-cart-item-${index}-${Date.now()}-${Math.random()}`,
+      }));
+      setCartItems(itemsWithCheckedState);
+
+      // 콘솔에서 실제 ID 및 생성된 _uniqueKey 확인
+      console.log(
+        '현재 장바구니 아이템 ID 및 고유 키 목록:',
+        itemsWithCheckedState.map((item) => ({
+          id: item.id,
+          _uniqueKey: item._uniqueKey,
         }))
       );
     } catch (err) {
@@ -36,18 +62,8 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
-      alert('로그인이 필요합니다.');
-      navigate('/signin');
-      return;
-    }
     fetchCart();
-  }, []);
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
+  }, [userEmail]);
 
   const toggleCheck = (id) => {
     setCartItems((prev) =>
@@ -87,7 +103,7 @@ const Cart = () => {
 
   const totalPrice = cartItems
     .filter((item) => item.checked)
-    .reduce((sum, item) => sum + item.price * item.quantity, 0);
+    .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const handleGoHome = () => {
     navigate('/main');
@@ -103,20 +119,17 @@ const Cart = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-indigo-100">
-        <div className="flex flex-col items-center">
-          <p className="text-xl text-red-500 mb-4">{error}</p>
-          <CommonButton variant="default" onClick={fetchCart}>
-            다시 시도
-          </CommonButton>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-indigo-100 flex-col">
+        <p className="text-xl text-red-500 mb-4">{error}</p>
+        <CommonButton variant="default" onClick={fetchCart}>
+          다시 시도
+        </CommonButton>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-8 flex justify-between gap-10 relative">
-      {/* 왼쪽 테이블 */}
       <div className="flex-1">
         <h1 className="text-2xl font-bold mb-6">장바구니</h1>
 
@@ -134,8 +147,11 @@ const Cart = () => {
             </button>
           </div>
         ) : (
-          <>
-            <div className="flex items-center mb-4">
+          <React.Fragment key="main-cart-content-wrapper-final-key">
+            <div
+              className="flex items-center mb-4"
+              key="all-checkbox-header-final"
+            >
               <input
                 type="checkbox"
                 className="w-4 h-4 accent-purple-500 mr-2"
@@ -147,8 +163,8 @@ const Cart = () => {
 
             {cartItems.map((item) => (
               <div
-                key={item.id}
-                className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center justify-between gap-4"
+                key={item._uniqueKey}
+                className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 mb-4"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <input
@@ -158,16 +174,16 @@ const Cart = () => {
                     className="w-4 h-4 accent-purple-500"
                   />
                   <img
-                    src={item.image}
+                    src={item.imageUrl || img9}
                     alt={item.name}
                     className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded"
                   />
                   <div className="flex flex-col">
                     <p className="font-medium text-gray-800 whitespace-nowrap">
-                      {item.name}
+                      {item.product.name}
                     </p>
                     <p className="text-sm text-gray-500">
-                      카테고리: {item.category}
+                      카테고리: {item.product.content || 'N/A'}
                     </p>
                     <p className="text-sm text-gray-500">
                       담은 수량: {item.quantity}
@@ -177,10 +193,10 @@ const Cart = () => {
 
                 <div className="flex items-center gap-2 self-end sm:self-center pt-5">
                   <div className="text-indigo-600 font-semibold text-base whitespace-nowrap">
-                    {(item.price * item.quantity).toLocaleString()}원
+                    {(item.product.price * item.quantity).toLocaleString()}원
                   </div>
                   <button
-                    onClick={() => deleteItem(item.id, item.name)}
+                    onClick={() => deleteItem(item.id, item.name)} // id로 삭제 로직 유지
                     className="text-gray-400 hover:text-red-500 text-lg"
                   >
                     ✕
@@ -189,17 +205,19 @@ const Cart = () => {
               </div>
             ))}
 
-            <div className="flex justify-end mt-6">
+            <div
+              className="flex justify-end mt-6"
+              key="clear-cart-button-final"
+            >
               <CommonButton onClick={() => setCartItems([])} variant="purple">
                 장바구니 비우기
               </CommonButton>
             </div>
-          </>
+          </React.Fragment>
         )}
       </div>
 
-      {/* 오른쪽 결제 박스 */}
-      <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md self-start">
+      <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md self-start sticky top-8">
         <h2 className="text-right text-sm text-gray-500 mb-4">Show Items</h2>
         <div className="space-y-3 text-sm text-gray-700">
           <div className="flex justify-between">

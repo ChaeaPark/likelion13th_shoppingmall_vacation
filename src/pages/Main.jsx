@@ -9,6 +9,7 @@ const Main = ({ addToCart }) => {
     const fetchProducts = async () => {
       try {
         const data = await getAllProducts();
+        console.log('상품 목록:', data);
         setProducts(data);
       } catch (error) {
         console.error('상품 목록을 불러오는데 실패했습니다:', error);
