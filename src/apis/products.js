@@ -14,7 +14,7 @@ export const getAllProducts = async () => {
 };
 
 export const getProductById = async (id) => {
-  const response = await isntance.get(`/products/${id}`);
+  const response = await instance.get(`/products/${id}`);
 
   return response.data;
 };
