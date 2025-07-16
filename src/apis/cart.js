@@ -19,6 +19,7 @@ export const getCartItems = async (userEmail) => {
 export const addToCart = async (itemToAdd) => {
   try {
     const res = await axiosInstance.post(CART_API_BASE_URL, itemToAdd);
+    return res.data;
   } catch (error) {
     console.error('장바구니에 아이템을 추가하는 데 실패했습니다:', error);
     throw error;

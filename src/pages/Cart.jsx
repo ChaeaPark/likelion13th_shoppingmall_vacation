@@ -37,15 +37,12 @@ const Cart = () => {
       const itemsWithCheckedState = fetchedCartItems.map((item, index) => ({
         ...item,
         checked: true,
-        // **고유 키 생성 로직 강화**: item.id가 없을 경우를 대비하여 고유한 임시 키 생성
-        // 실제 운영 환경에서는 백엔드에서 고유한 item.id를 받는 것이 가장 좋습니다.
         _uniqueKey: item.id
           ? item.id
           : `temp-cart-item-${index}-${Date.now()}-${Math.random()}`,
       }));
       setCartItems(itemsWithCheckedState);
 
-      // 콘솔에서 실제 ID 및 생성된 _uniqueKey 확인
       console.log(
         '현재 장바구니 아이템 ID 및 고유 키 목록:',
         itemsWithCheckedState.map((item) => ({
@@ -196,7 +193,7 @@ const Cart = () => {
                     {(item.product.price * item.quantity).toLocaleString()}원
                   </div>
                   <button
-                    onClick={() => deleteItem(item.id, item.name)} // id로 삭제 로직 유지
+                    onClick={() => deleteItem(item.id, item.name)}
                     className="text-gray-400 hover:text-red-500 text-lg"
                   >
                     ✕

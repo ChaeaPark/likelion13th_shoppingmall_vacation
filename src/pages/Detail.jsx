@@ -11,6 +11,7 @@ const Detail = ({ addToCart }) => {
   const [count, setCount] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
+  const userEmail = 'user@example.com';
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,10 +26,22 @@ const Detail = ({ addToCart }) => {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    console.log('handleAddToCart 함수 호출됨!');
     if (!product) return;
-    addToCart({ ...product, quantity: count });
-    setShowModal(true);
+    try {
+      const itemToAddToCart = {
+        productId: product.id,
+        quantity: count,
+        userEmail: userEmail,
+      };
+      await addToCart(itemToAddToCart);
+      setShowModal(true);
+    } catch (err) {
+      console.error('장바구니 추가 실패:', err);
+      setError('상품 추가에 실패했습니다. 다시 시도해주세요.');
+      alert('상품 추가에 실패했습니다.');
+    }
   };
 
   const handleCloseModal = () => {
