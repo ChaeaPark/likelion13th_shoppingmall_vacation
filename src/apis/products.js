@@ -6,7 +6,7 @@ export const getAllProducts = async () => {
     const response = await instance.get('/api/v1/products');
     console.log('상품 전체 조회 성공:', response.data);
 
-    return response.data.products;
+    return response.data.data.products;
   } catch (error) {
     console.error('상품 전체 조회 실패:', error);
     return [];
