@@ -16,7 +16,10 @@ const Cart = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getCartItems();
+      const userEmail = localStorage.getItem('userEmail');
+      if (!userEmail) throw new Error('로그인 정보가 없습니다.');
+
+      const data = await getCartItems(userEmail);
       setCartData(data);
       setCartItems(
         data.cartItems.map((item) => ({
@@ -44,14 +47,13 @@ const Cart = () => {
     );
   };
 
-  // 장바구니 아이템 삭제 핸들러 (API 연동)
   const deleteItem = async (id, itemName) => {
     if (window.confirm(`${itemName}을(를) 장바구니에서 삭제하시겠습니까?`)) {
-      setLoading(true); // 삭제 중 로딩 상태 활성화
+      setLoading(true);
       setError(null);
       try {
-        await removeFromCart(id); // API 호출
-        await fetchCart(); // 삭제 후 장바구니 데이터 다시 불러오기
+        await removeFromCart(id);
+        await fetchCart();
         alert(`${itemName}이(가) 장바구니에서 삭제되었습니다.`);
       } catch (err) {
         console.error('장바구니 아이템 삭제 실패:', err);
@@ -92,10 +94,12 @@ const Cart = () => {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-indigo-100">
-        <p className="text-xl text-red-500">{error}</p>
-        <CommonButton variant="default" onClick={fetchCart}>
-          다시 시도
-        </CommonButton>
+        <div className="flex flex-col items-center">
+          <p className="text-xl text-red-500 mb-4">{error}</p>
+          <CommonButton variant="default" onClick={fetchCart}>
+            다시 시도
+          </CommonButton>
+        </div>
       </div>
     );
   }
@@ -121,22 +125,20 @@ const Cart = () => {
           </div>
         ) : (
           <>
-            {cartItems.length > 0 && (
-              <div className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 accent-purple-500 mr-2"
-                  onChange={toggleAllCheck}
-                  checked={cartItems.every((item) => item.checked)}
-                />
-                <label className="text-gray-700">전체 선택</label>
-              </div>
-            )}
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                className="w-4 h-4 accent-purple-500 mr-2"
+                onChange={toggleAllCheck}
+                checked={cartItems.every((item) => item.checked)}
+              />
+              <label className="text-gray-700">전체 선택</label>
+            </div>
 
             {cartItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4"
+                className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <input
@@ -168,7 +170,7 @@ const Cart = () => {
                     {(item.price * item.quantity).toLocaleString()}원
                   </div>
                   <button
-                    onClick={() => deleteItem(item.id)}
+                    onClick={() => deleteItem(item.id, item.name)}
                     className="text-gray-400 hover:text-red-500 text-lg"
                   >
                     ✕
