@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CommonButton from '../components/CommonButton';
 import { getCartItems, removeFromCart } from '../apis/cart';
 import CartIcon from '../assets/Cart.svg';
-import img9 from '../assets/Image9.png';
+import img9 from '../assets/image9.png';
 
 const Cart = () => {
   const navigate = useNavigate();
