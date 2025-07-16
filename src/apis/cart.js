@@ -1,6 +1,7 @@
 import instance from './axios';
 
 const CART_API_BASE_URL = '/api/v1/cart';
+const CART_API_BASE_URL_add = '/api/v1/cart/items';
 
 export const getCartItems = async (userEmail) => {
   try {
@@ -22,7 +23,11 @@ export const addToCart = async (itemToAdd) => {
   console.log('addToCart 함수 실행 시작');
   console.log('itemToAdd 데이터:', itemToAdd);
   try {
-    const res = await instance.post(CART_API_BASE_URL, itemToAdd);
+    const res = await instance.post(CART_API_BASE_URL_add, itemToAdd, {
+      params: {
+        email: itemToAdd.userEmail,
+      },
+    });
     console.log('장바구니 추가 API 호출 성공:', res.data);
     return res.data;
   } catch (error) {
@@ -33,7 +38,11 @@ export const addToCart = async (itemToAdd) => {
 
 export const removeFromCart = async (cartItemId) => {
   try {
-    const res = await instance.delete(`${CART_API_BASE_URL}/${cartItemId}`);
+    const res = await instance.delete(`${CART_API_BASE_URL}/${cartItemId}`, {
+      params: {
+        email: userEmail,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error(
