@@ -14,9 +14,9 @@ export default function SearchPage({ addToCart }) {
     const fetchSearchResults = async () => {
       try {
         const res = await axios.get(
-          `/products?name=${encodeURIComponent(searchTerm)}`
+          `/api/v1/products/search?name=${encodeURIComponent(searchTerm)}`
         );
-        setResults(res.data.products);
+        setResults(res.data.data.products);
         setError('');
       } catch (err) {
         console.error(err);
