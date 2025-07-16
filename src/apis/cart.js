@@ -1,14 +1,16 @@
-import axiosInstance from './axios';
+import instance from './axios';
 
 const CART_API_BASE_URL = '/api/v1/cart';
 
 export const getCartItems = async (userEmail) => {
   try {
-    const res = await axiosInstance.get(CART_API_BASE_URL, {
+    const res = await instance.get(CART_API_BASE_URL, {
       params: {
         email: userEmail,
       },
     });
+    console.log('[addToCart] 장바구니 추가 API 호출 성공:', res.data);
+
     return res.data;
   } catch (error) {
     console.error('장바구니 아이템을 불러오는 데 실패했습니다:', error);
@@ -17,8 +19,11 @@ export const getCartItems = async (userEmail) => {
 };
 
 export const addToCart = async (itemToAdd) => {
+  console.log('addToCart 함수 실행 시작');
+  console.log('itemToAdd 데이터:', itemToAdd);
   try {
-    const res = await axiosInstance.post(CART_API_BASE_URL, itemToAdd);
+    const res = await instance.post(CART_API_BASE_URL, itemToAdd);
+    console.log('장바구니 추가 API 호출 성공:', res.data);
     return res.data;
   } catch (error) {
     console.error('장바구니에 아이템을 추가하는 데 실패했습니다:', error);
@@ -28,9 +33,7 @@ export const addToCart = async (itemToAdd) => {
 
 export const removeFromCart = async (cartItemId) => {
   try {
-    const res = await axiosInstance.delete(
-      `${CART_API_BASE_URL}/${cartItemId}`
-    );
+    const res = await instance.delete(`${CART_API_BASE_URL}/${cartItemId}`);
     return res.data;
   } catch (error) {
     console.error(

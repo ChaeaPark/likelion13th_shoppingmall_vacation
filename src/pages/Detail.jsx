@@ -2,9 +2,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CommonButton from '../components/CommonButton';
 import img9 from '../assets/image9.png';
-import axios from '../apis/axios';
+import instance from '../apis/axios';
+import { addToCart } from '../apis/cart';
 
-const Detail = ({ addToCart }) => {
+const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -16,8 +17,12 @@ const Detail = ({ addToCart }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`/api/v1/products/${id}`);
+        const res = await instance.get(`/api/v1/products/${id}`);
         setProduct(res.data.data);
+        console.log(
+          '⭐ Detail 페이지: 상품 데이터 성공적으로 로드됨:',
+          res.data.data
+        );
       } catch (err) {
         setError('해당 상품을 불러올 수 없습니다.');
         console.error(err);
@@ -28,13 +33,23 @@ const Detail = ({ addToCart }) => {
 
   const handleAddToCart = async () => {
     console.log('handleAddToCart 함수 호출됨!');
-    if (!product) return;
+    console.log('현재 product 상태 (handleAddToCart 내부):', product);
+    if (!product) {
+      console.log(
+        '상품 정보가 아직 로드되지 않았거나 유효하지 않습니다. addToCart 호출 불가.'
+      );
+      return;
+    }
     try {
       const itemToAddToCart = {
         productId: product.id,
         quantity: count,
         userEmail: userEmail,
       };
+      console.log(
+        '[Detail] 장바구니에 보낼 데이터 (addToCart 호출 직전):',
+        itemToAddToCart
+      );
       await addToCart(itemToAddToCart);
       setShowModal(true);
     } catch (err) {
