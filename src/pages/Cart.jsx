@@ -98,6 +98,27 @@ const Cart = () => {
     );
   };
 
+  const handleClearCart = async () => {
+    if (window.confirm('정말 장바구니를 비우시겠습니까?')) {
+      setLoading(true);
+      setError(null);
+      try {
+        // 모든 아이템을 삭제하는 API 호출 (없다면 각 아이템을 개별 삭제)
+        for (const item of cartItems) {
+          await removeFromCart(item.cartItemId, userEmail);
+        }
+        // 삭제 후 로컬 상태 비우기 또는 다시 fetch
+        setCartItems([]);
+        alert('장바구니가 비워졌습니다.');
+      } catch (error) {
+        console.error('장바구니 비우기 실패:', error);
+        setError('장바구니를 비우는 데 실패했습니다. 다시 시도해주세요.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const totalPrice = cartItems
     .filter((item) => item.checked)
     .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -200,7 +221,7 @@ const Cart = () => {
             ))}
 
             <div className="flex justify-end mt-6">
-              <CommonButton onClick={() => setCartItems([])} variant="purple">
+              <CommonButton onClick={handleClearCart} variant="purple">
                 장바구니 비우기
               </CommonButton>
             </div>

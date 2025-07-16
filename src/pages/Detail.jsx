@@ -44,13 +44,12 @@ const Detail = () => {
       const itemToAddToCart = {
         productId: product.id,
         quantity: count,
-        userEmail: userEmail,
       };
       console.log(
         '[Detail] 장바구니에 보낼 데이터 (addToCart 호출 직전):',
         itemToAddToCart
       );
-      await addToCart(itemToAddToCart);
+      await addToCart(itemToAddToCart, userEmail);
       setShowModal(true);
     } catch (err) {
       console.error('장바구니 추가 실패:', err);

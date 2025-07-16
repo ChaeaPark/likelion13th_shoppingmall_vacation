@@ -19,13 +19,13 @@ export const getCartItems = async (userEmail) => {
   }
 };
 
-export const addToCart = async (itemToAdd) => {
+export const addToCart = async (itemToAdd, userEmail) => {
   console.log('addToCart 함수 실행 시작');
   console.log('itemToAdd 데이터:', itemToAdd);
   try {
     const res = await instance.post(CART_API_BASE_URL_add, itemToAdd, {
       params: {
-        email: itemToAdd.userEmail,
+        email: userEmail,
       },
     });
     console.log('장바구니 추가 API 호출 성공:', res.data);
