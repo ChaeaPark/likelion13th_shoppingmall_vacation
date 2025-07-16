@@ -30,6 +30,7 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem('userEmail', formData.email);
     alert('로그인 성공!');
     navigate('/main');
   };
