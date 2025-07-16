@@ -1,6 +1,6 @@
 import axiosInstance from './axios';
 
-const CART_API_BASE_URL = '/cart';
+const CART_API_BASE_URL = '/api/v1/cart';
 
 export const getCartItems = async (userEmail) => {
   try {

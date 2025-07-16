@@ -36,6 +36,16 @@ const Cart = () => {
   };
 
   useEffect(() => {
+    const userEmail = localStorage.getItem('userEmail');
+    if (!userEmail) {
+      alert('로그인이 필요합니다.');
+      navigate('/signin');
+      return;
+    }
+    fetchCart();
+  }, []);
+
+  useEffect(() => {
     fetchCart();
   }, []);
 
