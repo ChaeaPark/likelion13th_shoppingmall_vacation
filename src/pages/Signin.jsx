@@ -112,7 +112,10 @@ const Signin = () => {
         </div>
       </div>
 
-      <div className="hidden md:flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <div
+        className="hidden md:flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100
+ p-4"
+      >
         {/* 데스크탑 반응형 */}
         <div className="bg-white rounded-2xl shadow-2xl px-8 md:p-10 py-16 border border-gray-100 flex flex-col items-center max-w-md w-full">
           <p className="text-lg md:text-xl font-semibold text-gray-800 text-center mb-16">
