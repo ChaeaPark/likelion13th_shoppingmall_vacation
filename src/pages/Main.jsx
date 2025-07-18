@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAllProducts } from '../apis/products';
 import Card from '../components/Card';
 
-const Main = ({ addToCart }) => {
+const Main = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ const Main = ({ addToCart }) => {
                   name={item.name}
                   category={item.category}
                   price={item.price}
-                  onAddToCart={() => addToCart(item)}
                 />
               ))}
             </div>
