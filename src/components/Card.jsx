@@ -2,14 +2,28 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import CommonButton from './CommonButton';
 import img9 from '../assets/image9.png';
+import { addToCart } from '../apis/cart';
 
-export default function Card({ id, name, category, price, onAddToCart }) {
+export default function Card({ id, name, category, price }) {
   const navigate = useNavigate();
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.stopPropagation();
-    onAddToCart();
-    navigate('/cart');
+
+    const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+    const itemToAdd = {
+      productId: id,
+      quantity: 1,
+    };
+
+    try {
+      await addToCart(itemToAdd, userEmail);
+      alert('장바구니에 추가되었습니다!');
+      navigate('/cart');
+    } catch (error) {
+      console.error('장바구니 추가 실패:', error);
+      alert('장바구니 추가에 실패했습니다.');
+    }
   };
 
   const handleCardClick = () => {
@@ -33,9 +47,11 @@ export default function Card({ id, name, category, price, onAddToCart }) {
           {price.toLocaleString()}원
         </div>
 
-        {/* Add to Cart 버튼은 클릭 방지 */}
+        {/* Add to Cart 버튼 */}
         <div onClick={handleAddToCart}>
-          <CommonButton variant="main">장바구니</CommonButton>
+          <CommonButton variant="main" type="button">
+            장바구니
+          </CommonButton>
         </div>
       </div>
     </div>
@@ -47,7 +63,6 @@ Card.propTypes = {
   name: PropTypes.string.isRequired,
   category: PropTypes.string,
   price: PropTypes.number.isRequired,
-  onAddToCart: PropTypes.func.isRequired,
 };
 
 Card.defaultProps = {
