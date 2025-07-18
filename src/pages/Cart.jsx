@@ -7,7 +7,6 @@ import img9 from '../assets/image9.png';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartData, setCartData] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
