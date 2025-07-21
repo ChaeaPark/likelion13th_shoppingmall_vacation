@@ -4,7 +4,8 @@ import CommonButton from '../components/CommonButton';
 import img9 from '../assets/image9.png';
 import instance from '../apis/axios';
 import { addToCart } from '../apis/cart';
-import { useAuthStore } from '../stores/useAuthStore'; // ✅ 추가
+import { useAuthStore } from '../stores/useAuthStore';
+import LoginRequiredModal from '../components/LoginRequiredModal';
 
 const Detail = () => {
   const { id } = useParams();
@@ -12,19 +13,16 @@ const Detail = () => {
   const [product, setProduct] = useState(null);
   const [count, setCount] = useState(1);
   const [showModal, setShowModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [error, setError] = useState('');
 
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // ✅ 상태 불러오기
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await instance.get(`/api/v1/products/${id}`);
         setProduct(res.data.data);
-        console.log(
-          '⭐ Detail 페이지: 상품 데이터 성공적으로 로드됨:',
-          res.data.data
-        );
       } catch (err) {
         setError('해당 상품을 불러올 수 없습니다.');
         console.error(err);
@@ -35,21 +33,18 @@ const Detail = () => {
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      alert('로그인이 필요한 기능입니다.');
+      setShowLoginModal(true);
       return;
     }
 
-    if (!product) {
-      console.log('상품 정보가 아직 로드되지 않았거나 유효하지 않습니다.');
-      return;
-    }
+    if (!product) return;
 
     try {
       const itemToAddToCart = {
         productId: product.id,
         quantity: count,
       };
-      await addToCart(itemToAddToCart); // ✅ userEmail 제거
+      await addToCart(itemToAddToCart);
       setShowModal(true);
     } catch (err) {
       console.error('장바구니 추가 실패:', err);
@@ -86,14 +81,14 @@ const Detail = () => {
       </div>
 
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-xl p-8 flex flex-col md:flex-row gap-10 items-center">
-        {/* 이미지 영역 */}
+        {/* 이미지 */}
         <img
           src={img9}
           alt={product.name}
           className="w-64 h-64 object-contain rounded-md shadow"
         />
 
-        {/* 상세 정보 영역 */}
+        {/* 상세 정보 */}
         <div className="flex-1 space-y-4">
           <p className="text-sm text-gray-500">{product.category}</p>
 
@@ -137,6 +132,7 @@ const Detail = () => {
         </div>
       </div>
 
+      {/* 장바구니 추가 완료 모달 */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-xl shadow-xl w-[300px] text-center space-y-6">
@@ -153,6 +149,11 @@ const Detail = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* 로그인 필요 모달 */}
+      {showLoginModal && (
+        <LoginRequiredModal onClose={() => setShowLoginModal(false)} />
       )}
     </div>
   );
