@@ -19,6 +19,10 @@ const Detail = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
+    if (isLoggedIn) setShowLoginModal(false);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await instance.get(`/api/v1/products/${id}`);

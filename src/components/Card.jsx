@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommonButton from './CommonButton';
 import img9 from '../assets/image9.png';
 import { addToCart } from '../apis/cart';
@@ -12,6 +12,10 @@ export default function Card({ id, name, category, price }) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) setShowLoginModal(false);
+  }, [isLoggedIn]);
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
