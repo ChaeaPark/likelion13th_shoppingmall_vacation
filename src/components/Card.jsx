@@ -3,21 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import CommonButton from './CommonButton';
 import img9 from '../assets/image9.png';
 import { addToCart } from '../apis/cart';
+import { useAuthStore } from '../stores/useAuthStore'; // ✅ 추가
 
 export default function Card({ id, name, category, price }) {
   const navigate = useNavigate();
 
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // ✅ 로그인 상태 가져오기
+
   const handleAddToCart = async (e) => {
     e.stopPropagation();
 
-    const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+    if (!isLoggedIn) {
+      alert('로그인이 필요한 기능입니다.');
+      return;
+    }
+
     const itemToAdd = {
       productId: id,
       quantity: 1,
     };
 
     try {
-      await addToCart(itemToAdd, userEmail);
+      await addToCart(itemToAdd); // ✅ userEmail 제거
       alert('장바구니에 추가되었습니다!');
       navigate('/cart');
     } catch (error) {
