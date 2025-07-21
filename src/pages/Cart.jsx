@@ -4,21 +4,30 @@ import CommonButton from '../components/CommonButton';
 import { getCartItems, removeFromCart } from '../apis/cart';
 import CartIcon from '../assets/Cart.svg';
 import img9 from '../assets/image9.png';
+import { useAuthStore } from '../stores/useAuthStore'; // ✅ 추가
 
 const Cart = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // ✅ 로그인 확인
+
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const userEmail = 'user@example.com';
+  // ✅ 로그인 여부 확인 후 미로그인 시 차단
+  useEffect(() => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용 가능한 페이지입니다.');
+      navigate('/');
+      return;
+    }
+  }, [isLoggedIn, navigate]);
 
   const fetchCart = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getCartItems(userEmail);
-      console.log('--- getCartItems에서 받은 응답 데이터 (Cart.jsx) ---', data);
+      const data = await getCartItems(); // ✅ userEmail 제거
 
       let fetchedCartItems = [];
       if (data && data.data && Array.isArray(data.data.cartItems)) {
@@ -26,10 +35,7 @@ const Cart = () => {
       } else if (data && Array.isArray(data.cartItems)) {
         fetchedCartItems = data.cartItems;
       } else {
-        console.warn(
-          '장바구니 API 응답이 예상과 다릅니다. cartItems 배열을 찾을 수 없습니다.',
-          data
-        );
+        console.warn('cartItems 배열을 찾을 수 없습니다:', data);
         fetchedCartItems = [];
       }
 
@@ -41,14 +47,6 @@ const Cart = () => {
           : `temp-cart-item-${index}-${Date.now()}-${Math.random()}`,
       }));
       setCartItems(itemsWithCheckedState);
-
-      console.log(
-        '현재 장바구니 아이템 ID 및 고유 키 목록:',
-        itemsWithCheckedState.map((item) => ({
-          id: item.cartItemId,
-          _uniqueKey: item._uniqueKey,
-        }))
-      );
     } catch (err) {
       console.error('장바구니 데이터를 불러오는 데 실패했습니다:', err);
       setError('장바구니를 불러오지 못했습니다. 다시 시도해주세요.');
@@ -58,13 +56,13 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    fetchCart();
-  }, [userEmail]);
+    if (isLoggedIn) fetchCart();
+  }, [isLoggedIn]);
 
   const toggleCheck = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.cartItmeId === id ? { ...item, checked: !item.checked } : item
+        item.cartItemId === id ? { ...item, checked: !item.checked } : item
       )
     );
   };
@@ -74,7 +72,7 @@ const Cart = () => {
       setLoading(true);
       setError(null);
       try {
-        await removeFromCart(id, userEmail);
+        await removeFromCart(id); // ✅ userEmail 제거
         await fetchCart();
         alert(`${itemName}이(가) 장바구니에서 삭제되었습니다.`);
       } catch (err) {
@@ -102,11 +100,9 @@ const Cart = () => {
       setLoading(true);
       setError(null);
       try {
-        // 모든 아이템을 삭제하는 API 호출 (없다면 각 아이템을 개별 삭제)
         for (const item of cartItems) {
-          await removeFromCart(item.cartItemId, userEmail);
+          await removeFromCart(item.cartItemId); // ✅ userEmail 제거
         }
-        // 삭제 후 로컬 상태 비우기 또는 다시 fetch
         setCartItems([]);
         alert('장바구니가 비워졌습니다.');
       } catch (error) {
@@ -255,4 +251,5 @@ const Cart = () => {
     </div>
   );
 };
+
 export default Cart;
