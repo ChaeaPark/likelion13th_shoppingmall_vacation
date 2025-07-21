@@ -7,6 +7,7 @@ import Cart from './pages/Cart';
 import Layout from './components/Layout';
 import Detail from './pages/Detail';
 import SearchPage from './pages/SearchPage';
+import KakaoRedirect from './pages/KakaoRedirect';
 import './index.css';
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             path="/search"
             element={<SearchPage addToCart={addToCart} />}
           />
+          <Route path="/auth/callback" element={<KakaoRedirect />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -39,6 +39,16 @@ const Signin = () => {
     navigate('/register');
   };
 
+  const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+  const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
+
+  // 인가코드 받는 함수 작성
+  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+
+  const handleLogin = () => {
+    window.location.href = kakaoURL;
+  };
+
   return (
     <>
       <div className="relative min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center px-4 md:hidden">
@@ -117,17 +127,20 @@ const Signin = () => {
  p-4"
       >
         {/* 데스크탑 반응형 */}
-        <div className="bg-white rounded-2xl shadow-2xl px-8 md:p-10 py-16 border border-gray-100 flex flex-col items-center max-w-md w-full">
-          <p className="text-lg md:text-xl font-semibold text-gray-800 text-center mb-16">
-            카카오톡으로 간편하게 로그인하고
-            <br />
+        <main className="flex flex-col items-center justify-center h-full flex-1 bg-white">
+          <h1 className="text-[#191919] text-2xl font-semibold text-center mb-8">
+            카카오톡으로 간편하게 로그인하고 <br />
             서비스를 이용해보세요!
-          </p>
-          <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center transition-colors duration-200">
-            카카오톡으로 로그인
-            <img src={kakaoLogo} alt="Kakao Logo" className="w-5 h-5 ml-8" />
+          </h1>
+
+          <button
+            onClick={handleLogin}
+            className="flex items-center justify-center gap-2 w-[280px] py-3 cursor-pointer rounded-md bg-[#FEE500] text-[#191919] hover:opacity-90 transition"
+          >
+            <img src={kakaoLogo} alt="kakao" className="w-6 h-6" />
+            <span className="text-base font-semibold">카카오로 계속하기</span>
           </button>
-        </div>
+        </main>
       </div>
     </>
   );
