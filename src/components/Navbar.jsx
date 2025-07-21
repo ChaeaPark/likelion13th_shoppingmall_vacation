@@ -5,27 +5,22 @@ import signinIcon from '../assets/Signin.svg';
 import cartIcon from '../assets/Cart.svg';
 import SearchBar from './SearchBar';
 import React from 'react'; // Added missing import for React
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !!localStorage.getItem('userEmail')
-  );
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const clearAuth = useAuthStore((state) => state.clearAuth); // 로그아웃용
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('userEmail');
-    setIsLoggedIn(false);
+    clearAuth(); // zustand 상태도 초기화
+    localStorage.removeItem('userEmail'); // 예전 방식 남아있다면 제거
     navigate('/main');
   };
-
-  // 로그인 상태 변화 감지 (다른 탭/창에서 로그아웃 등)
-  // eslint-disable-next-line
-  React.useEffect(() => {
-    const onStorage = () => setIsLoggedIn(!!localStorage.getItem('userEmail'));
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
 
   return (
     <>
