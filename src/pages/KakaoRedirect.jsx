@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 import { login } from '../apis/auth';
+import { getCurrentUser } from '../apis/auth';
 
 const KakaoRedirect = () => {
   const nav = useNavigate();
@@ -22,10 +23,14 @@ const KakaoRedirect = () => {
       try {
         const { accessToken, refreshToken } = await login(code);
         setTokens(accessToken, refreshToken);
+
+        const user = await getCurrentUser();
+        console.log('로그인한 사용자 정보:', user);
+
         nav('/main');
       } catch (error) {
         alert('로그인 실패 : ', error);
-        nav('/login');
+        nav('/');
       }
     };
     kakaoLogin();
