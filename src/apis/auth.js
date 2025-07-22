@@ -7,3 +7,8 @@ export const login = async (code) => {
 
   return res.data;
 };
+
+export const getCurrentUser = async () => {
+  const res = await instance.get('/api/v1/auth/me');
+  return res.data;
+};
