@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
-import { login } from '../apis/auth';
-import { getCurrentUser } from '../apis/auth';
 
 const KakaoRedirect = () => {
   const nav = useNavigate();
