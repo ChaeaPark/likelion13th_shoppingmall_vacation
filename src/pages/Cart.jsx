@@ -29,12 +29,10 @@ const Cart = () => {
       const data = await getCartItems();
 
       let fetchedCartItems = [];
-      if (data && data.data && Array.isArray(data.data.cartItems)) {
-        fetchedCartItems = data.data.cartItems;
-      } else if (data && Array.isArray(data.cartItems)) {
-        fetchedCartItems = data.cartItems;
+      if (data && data.data && Array.isArray(data.data.cart_items)) {
+        fetchedCartItems = data.data.cart_items;
       } else {
-        console.warn('cartItems 배열을 찾을 수 없습니다:', data);
+        console.warn('cart_items 배열을 찾을 수 없습니다:', data);
         fetchedCartItems = [];
       }
 
