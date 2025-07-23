@@ -18,7 +18,7 @@ export default function Navbar() {
   const handleLogout = () => {
     clearAuth();
     localStorage.removeItem('userEmail');
-    navigate('/main');
+    navigate('/');
   };
 
   return (
