@@ -47,7 +47,8 @@ export default function Navbar() {
               onClick={handleLogout}
               className="hover:text-yellow-300 transition flex items-center space-x-2 bg-transparent border-none outline-none cursor-pointer"
             >
-              <span className="text-white">로그아웃</span>
+              <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+              <span className="text-white">Log out</span>
             </button>
           ) : (
             <Link
@@ -96,7 +97,8 @@ export default function Navbar() {
               }}
               className="flex items-center space-x-2 bg-transparent border-none outline-none cursor-pointer"
             >
-              <span className="text-black">로그아웃</span>
+              <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+              <span className="text-black">Log out</span>
             </button>
           ) : (
             <Link
