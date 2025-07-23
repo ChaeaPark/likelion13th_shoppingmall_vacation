@@ -7,7 +7,10 @@ const CART_API_BASE_URL_add = '/api/v1/cart/items';
 export const getCartItems = async () => {
   try {
     const res = await instance.get(CART_API_BASE_URL);
-    console.log('[getCartItems] 장바구니 조회 API 호출 성공:', res.data);
+    console.log('[getCartItems] 전체 응답:', res);
+    console.log('[getCartItems] 응답 데이터:', res.data);
+    console.log('[getCartItems] res.data의 키 목록:', Object.keys(res.data));
+    console.log('[getCartItems] res.data:', JSON.stringify(res.data, null, 2));
     return res.data;
   } catch (error) {
     console.error('장바구니 아이템을 불러오는 데 실패했습니다:', error);
@@ -29,7 +32,6 @@ export const addToCart = async (itemToAdd) => {
   }
 };
 
-// 장바구니에서 아이템 제거 (이메일 파라미터 제거됨)
 export const removeFromCart = async (cartItemId) => {
   try {
     const res = await instance.delete(`${CART_API_BASE_URL_add}/${cartItemId}`);

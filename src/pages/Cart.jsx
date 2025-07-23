@@ -36,13 +36,11 @@ const Cart = () => {
         fetchedCartItems = [];
       }
 
-      const itemsWithCheckedState = fetchedCartItems.map((item, index) => ({
+      const itemsWithCheckedState = fetchedCartItems.map((item) => ({
         ...item,
         checked: true,
-        _uniqueKey: item.cartItemId
-          ? item.id
-          : `temp-cart-item-${index}-${Date.now()}-${Math.random()}`,
       }));
+
       setCartItems(itemsWithCheckedState);
     } catch (err) {
       console.error('장바구니 데이터를 불러오는 데 실패했습니다:', err);
@@ -59,7 +57,7 @@ const Cart = () => {
   const toggleCheck = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.cartItemId === id ? { ...item, checked: !item.checked } : item
+        item.cart_item_id === id ? { ...item, checked: !item.checked } : item
       )
     );
   };
@@ -98,7 +96,7 @@ const Cart = () => {
       setError(null);
       try {
         for (const item of cartItems) {
-          await removeFromCart(item.cartItemId);
+          await removeFromCart(item.cart_item_id);
         }
         setCartItems([]);
         alert('장바구니가 비워졌습니다.');
@@ -170,18 +168,18 @@ const Cart = () => {
 
             {cartItems.map((item) => (
               <div
-                key={item.cartItemId}
+                key={item.cart_item_id}
                 className="bg-white shadow p-4 rounded flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 mb-4"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <input
                     type="checkbox"
                     checked={item.checked}
-                    onChange={() => toggleCheck(item.cartItemId)}
+                    onChange={() => toggleCheck(item.cart_item_id)}
                     className="w-4 h-4 accent-purple-500"
                   />
                   <img
-                    src={item.imageUrl || img9}
+                    src={item.image_url || img9}
                     alt={item.name}
                     className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded"
                   />
@@ -203,7 +201,9 @@ const Cart = () => {
                     {(item.product.price * item.quantity).toLocaleString()}원
                   </div>
                   <button
-                    onClick={() => deleteItem(item.cartItemId, item.name)}
+                    onClick={() =>
+                      deleteItem(item.cart_item_id, item.product.name)
+                    }
                     className="text-gray-400 hover:text-red-500 text-lg"
                   >
                     ✕
