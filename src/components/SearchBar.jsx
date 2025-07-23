@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Searchicon from '../assets/SearchIcon.png'; // Assuming you have a search icon
+import Searchicon from '../assets/Searchicon.png'; // Assuming you have a search icon
 
 export default function SearchBar() {
   const [searchTerm, setSearchTerm] = useState('');

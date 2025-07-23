@@ -1,12 +1,26 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import buttonIcon from '../assets/Button.svg';
 import signinIcon from '../assets/Signin.svg';
 import cartIcon from '../assets/Cart.svg';
 import SearchBar from './SearchBar';
+import React from 'react'; // Added missing import for React
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const clearAuth = useAuthStore((state) => state.clearAuth); // 로그아웃용
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearAuth(); // zustand 상태도 초기화
+    localStorage.removeItem('userEmail'); // 예전 방식 남아있다면 제거
+    navigate('/main');
+  };
 
   return (
     <>
@@ -28,13 +42,22 @@ export default function Navbar() {
         </div>
 
         <div className="space-x-6 text-lg flex items-center">
-          <Link
-            to="/"
-            className="hover:text-yellow-300 transition flex items-center space-x-2"
-          >
-            <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
-            <span className="text-white">Sign In</span>
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="hover:text-yellow-300 transition flex items-center space-x-2 bg-transparent border-none outline-none cursor-pointer"
+            >
+              <span className="text-white">로그아웃</span>
+            </button>
+          ) : (
+            <Link
+              to="/"
+              className="hover:text-yellow-300 transition flex items-center space-x-2"
+            >
+              <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+              <span className="text-white">Sign In</span>
+            </Link>
+          )}
 
           <Link
             to="/cart"
@@ -65,14 +88,26 @@ export default function Navbar() {
           <div className="w-full mb-3">
             <SearchBar />
           </div>
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center space-x-2"
-          >
-            <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
-            <span className="text-black">Sign In</span>
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                handleLogout();
+              }}
+              className="flex items-center space-x-2 bg-transparent border-none outline-none cursor-pointer"
+            >
+              <span className="text-black">로그아웃</span>
+            </button>
+          ) : (
+            <Link
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center space-x-2"
+            >
+              <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
+              <span className="text-black">Sign In</span>
+            </Link>
+          )}
           <Link
             to="/cart"
             onClick={() => setIsOpen(false)}

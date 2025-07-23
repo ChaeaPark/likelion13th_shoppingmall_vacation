@@ -1,8 +1,24 @@
-import React from 'react';
-import clothes from '../data/clothes';
+import React, { useEffect, useState } from 'react';
+import { getAllProducts } from '../apis/products';
 import Card from '../components/Card';
 
-const Main = ({ addToCart }) => {
+const Main = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        console.log('상품 목록:', data);
+        setProducts(data);
+      } catch (error) {
+        console.error('상품 목록을 불러오는데 실패했습니다:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <main className="relative bg-gradient-to-br from-purple-100 to-indigo-100 min-h-screen flex justify-center px-4 py-10">
       <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -21,18 +37,21 @@ const Main = ({ addToCart }) => {
           <div className="text-base md:text-lg tracking-widest text-gray-500">
             Featured Products
           </div>
-          <div className="w-full grid grid-cols-2 dt:grid-cols-4 gap-6">
-            {clothes.map((item) => (
-              <Card
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                category={item.category}
-                price={item.price}
-                onAddToCart={() => addToCart(item)}
-              />
-            ))}
-          </div>
+          {products && products.length > 0 ? (
+            <div className="w-full grid grid-cols-2 dt:grid-cols-4 gap-6">
+              {products.map((item) => (
+                <Card
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  category={item.category}
+                  price={item.price}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">상품 정보를 불러올 수 없습니다.</p>
+          )}
         </div>
       </section>
     </main>

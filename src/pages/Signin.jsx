@@ -30,12 +30,18 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem('userEmail', formData.email);
     alert('로그인 성공!');
     navigate('/main');
   };
 
   const handleGoToRegister = () => {
     navigate('/register');
+  };
+
+  const handleLogin = () => {
+    window.location.href =
+      'https://mutsamarket.store/oauth2/authorization/kakao';
   };
 
   return (
@@ -111,19 +117,25 @@ const Signin = () => {
         </div>
       </div>
 
-      <div className="hidden md:flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <div
+        className="hidden md:flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100
+ p-4"
+      >
         {/* 데스크탑 반응형 */}
-        <div className="bg-white rounded-2xl shadow-2xl px-8 md:p-10 py-16 border border-gray-100 flex flex-col items-center max-w-md w-full">
-          <p className="text-lg md:text-xl font-semibold text-gray-800 text-center mb-16">
-            카카오톡으로 간편하게 로그인하고
-            <br />
+        <main className="flex flex-col items-center justify-center h-full flex-1 bg-white">
+          <h1 className="text-[#191919] text-2xl font-semibold text-center mb-8">
+            카카오톡으로 간편하게 로그인하고 <br />
             서비스를 이용해보세요!
-          </p>
-          <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center transition-colors duration-200">
-            카카오톡으로 로그인
-            <img src={kakaoLogo} alt="Kakao Logo" className="w-5 h-5 ml-8" />
+          </h1>
+
+          <button
+            onClick={handleLogin}
+            className="flex items-center justify-center gap-2 w-[280px] py-3 cursor-pointer rounded-md bg-[#FEE500] text-[#191919] hover:opacity-90 transition"
+          >
+            <img src={kakaoLogo} alt="kakao" className="w-6 h-6" />
+            <span className="text-base font-semibold">카카오로 계속하기</span>
           </button>
-        </div>
+        </main>
       </div>
     </>
   );
