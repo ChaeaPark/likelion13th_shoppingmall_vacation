@@ -1,24 +1,23 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import buttonIcon from '../assets/Button.svg';
 import signinIcon from '../assets/Signin.svg';
 import cartIcon from '../assets/Cart.svg';
 import SearchBar from './SearchBar';
-import React from 'react'; // Added missing import for React
+import React from 'react';
 import { useAuthStore } from '../stores/useAuthStore';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-
-  const clearAuth = useAuthStore((state) => state.clearAuth); // 로그아웃용
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    clearAuth(); // zustand 상태도 초기화
-    localStorage.removeItem('userEmail'); // 예전 방식 남아있다면 제거
+    clearAuth();
+    localStorage.removeItem('userEmail');
     navigate('/main');
   };
 
@@ -26,17 +25,12 @@ export default function Navbar() {
     <>
       {/* 데스크탑 Navbar */}
       <nav className="hidden dt:flex justify-between items-center px-10 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
-        <Link
-          to="/main"
-          className="text-2xl font-bold tracking-tight hover:text-yellow-200"
-        >
+        <span className="text-2xl font-bold tracking-tight text-white">
           ShopMall
-        </Link>
+        </span>
 
         <div className="flex-grow flex justify-center">
-          {' '}
           <div className="w-full max-w-md">
-            {' '}
             <SearchBar />
           </div>
         </div>
@@ -51,22 +45,22 @@ export default function Navbar() {
               <span className="text-white">Log out</span>
             </button>
           ) : (
-            <Link
-              to="/"
-              className="hover:text-yellow-300 transition flex items-center space-x-2"
+            <span
+              onClick={() => navigate('/')}
+              className="hover:text-yellow-300 transition flex items-center space-x-2 cursor-pointer"
             >
               <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
               <span className="text-white">Sign In</span>
-            </Link>
+            </span>
           )}
 
-          <Link
-            to="/cart"
-            className="hover:text-yellow-300 transition flex items-center space-x-2"
+          <span
+            onClick={() => navigate('/cart')}
+            className="hover:text-yellow-300 transition flex items-center space-x-2 cursor-pointer"
           >
             <img src={cartIcon} alt="Cart" className="w-6 h-6" />
             <span className="text-white">Cart</span>
-          </Link>
+          </span>
         </div>
       </nav>
 
@@ -78,9 +72,9 @@ export default function Navbar() {
         >
           <img src={buttonIcon} alt="메뉴 열기" className="w-8 h-8" />
         </button>
-        <Link to="/main" className="text-xl font-semibold tracking-wide">
+        <span className="text-xl font-semibold tracking-wide text-white">
           ShopMall
-        </Link>
+        </span>
       </nav>
 
       {/* 모바일 메뉴 */}
@@ -101,23 +95,27 @@ export default function Navbar() {
               <span className="text-black">Log out</span>
             </button>
           ) : (
-            <Link
-              to="/"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center space-x-2"
+            <span
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/');
+              }}
+              className="flex items-center space-x-2 cursor-pointer"
             >
               <img src={signinIcon} alt="Sign In" className="w-6 h-6" />
               <span className="text-black">Sign In</span>
-            </Link>
+            </span>
           )}
-          <Link
-            to="/cart"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center space-x-2"
+          <span
+            onClick={() => {
+              setIsOpen(false);
+              navigate('/cart');
+            }}
+            className="flex items-center space-x-2 cursor-pointer"
           >
             <img src={cartIcon} alt="Cart" className="w-6 h-6" />
             <span className="text-black">Cart</span>
-          </Link>
+          </span>
         </div>
       )}
     </>
