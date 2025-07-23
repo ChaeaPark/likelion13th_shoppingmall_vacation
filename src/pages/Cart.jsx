@@ -4,17 +4,16 @@ import CommonButton from '../components/CommonButton';
 import { getCartItems, removeFromCart } from '../apis/cart';
 import CartIcon from '../assets/Cart.svg';
 import img9 from '../assets/image9.png';
-import { useAuthStore } from '../stores/useAuthStore'; // ✅ 추가
+import { useAuthStore } from '../stores/useAuthStore';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // ✅ 로그인 확인
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ 로그인 여부 확인 후 미로그인 시 차단
   useEffect(() => {
     if (!isLoggedIn) {
       alert('로그인 후 이용 가능한 페이지입니다.');
@@ -27,7 +26,7 @@ const Cart = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getCartItems(); // ✅ userEmail 제거
+      const data = await getCartItems();
 
       let fetchedCartItems = [];
       if (data && data.data && Array.isArray(data.data.cartItems)) {
@@ -72,7 +71,7 @@ const Cart = () => {
       setLoading(true);
       setError(null);
       try {
-        await removeFromCart(id); // ✅ userEmail 제거
+        await removeFromCart(id);
         await fetchCart();
         alert(`${itemName}이(가) 장바구니에서 삭제되었습니다.`);
       } catch (err) {
@@ -101,7 +100,7 @@ const Cart = () => {
       setError(null);
       try {
         for (const item of cartItems) {
-          await removeFromCart(item.cartItemId); // ✅ userEmail 제거
+          await removeFromCart(item.cartItemId);
         }
         setCartItems([]);
         alert('장바구니가 비워졌습니다.');
