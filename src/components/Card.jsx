@@ -26,7 +26,7 @@ export default function Card({ id, name, category, price }) {
     }
 
     const itemToAdd = {
-      productId: id,
+      product_id: id,
       quantity: 1,
     };
 
@@ -62,7 +62,6 @@ export default function Card({ id, name, category, price }) {
             {price.toLocaleString()}원
           </div>
 
-          {/* Add to Cart 버튼 */}
           <div onClick={handleAddToCart}>
             <CommonButton variant="main" type="button">
               장바구니
@@ -71,7 +70,6 @@ export default function Card({ id, name, category, price }) {
         </div>
       </div>
 
-      {/* 로그인 필요 모달 */}
       {showLoginModal && (
         <LoginRequiredModal onClose={() => setShowLoginModal(false)} />
       )}
