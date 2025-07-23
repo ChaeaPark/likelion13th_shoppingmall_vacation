@@ -20,7 +20,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Layout이 없는 단일 페이지 */}
+        {/* Layout이 없는 단독 라우트 */}
+        <Route path="/auth/callback" element={<KakaoRedirect />} />
 
         {/* Layout이 적용되는 공통 구조 */}
         <Route element={<Layout />}>
@@ -39,7 +40,6 @@ function App() {
             path="/search"
             element={<SearchPage addToCart={addToCart} />}
           />
-          <Route path="/auth/callback" element={<KakaoRedirect />} />
         </Route>
       </Routes>
     </BrowserRouter>
