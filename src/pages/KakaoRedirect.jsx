@@ -11,31 +11,19 @@ const KakaoRedirect = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const code = searchParams.get('code');
 
-    if (!code) {
-      alert('인가 코드 없음');
-      nav('/login');
+    const accessToken = searchParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token');
+
+    if (!accessToken || !refreshToken) {
+      alert('토큰 정보 없음');
+      nav('/');
       return;
     }
 
-    const kakaoLogin = async () => {
-      try {
-        const { accessToken, refreshToken } = await login(code);
-        setTokens(accessToken, refreshToken);
+    setTokens(accessToken, refreshToken);
 
-        const user = await getCurrentUser();
-        console.log('로그인한 사용자 정보:', user);
-
-        nav('/main');
-      } catch (error) {
-        alert('로그인 실패 : ', error);
-        nav('/');
-      }
-    };
-    kakaoLogin();
-
-    console.log('카카오 인가 코드 : ', code);
+    nav('/main');
   }, [location.search, nav]);
 
   return <>로딩중...</>;
